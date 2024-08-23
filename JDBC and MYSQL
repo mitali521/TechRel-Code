@@ -1,0 +1,72 @@
+JDBC File
+
+package coe;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class techrel 
+{
+	public static void main(String[] args) 
+	{
+		
+	
+		Connection con=DriverManager.getConnection("jdbc:mysql://localhost/JDBC","root","root");
+			Statement stmt=null;
+			ResultSet rs=null;
+			preparedStatement psmt=null;
+		try
+		{
+			if(con==null)
+				System.out.println("Connection is not Establish.....");
+			else
+			{
+				System.out.println("Connection established.....");
+				//Creation of table
+				stmt=con.createStatement();
+				String sql="Create table employee(e_id int primary key auto_increment,e_name varchar(30),e_position varchar(30),e_sal varchar(30))";
+				stmt.execute(sql);
+				System.out.println("Table is Created.....");
+				
+				//Insertion of data
+				stmt=con.createStatement();
+				stmt.addBatch("insert into employee values(10,'Mitali','Manager',20000)");
+				stmt.addBatch("insert into employee values(11,'Swarali','HR',40000)");
+				stmt.addBatch("insert into empoyee values(12,'Geeta','Employee',50000");
+				stmt.executeBatch();
+				System.out.println("Record enetred successfully....");
+				
+				//Updating query
+				String query="update employee set * where e_sal=?";
+				psmt=con.prepareStatement(query);
+				psmt.setString(2, "Bhavesh");
+				psmt.setString(3, "Employee");
+				psmt.setInt(4,12000);
+				psmt.executeUpdate();
+				
+				//Display of data
+				String sql1="select * from employee";
+				psmt=con.prepareStatement(sql1);
+						while(rs.next())
+						{
+							
+							System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getInt(4));
+						}
+				
+				}
+			}
+			catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			finally
+				{
+					con.close();
+				}
+	}
+}
+
+/
